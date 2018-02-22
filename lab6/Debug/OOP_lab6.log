@@ -1,0 +1,3 @@
+﻿  Main.cpp
+d:\projects\oop_lab6\mywstring.h(48): warning C4715: MyWString::CheckWords: значение возвращается не при всех путях выполнения
+  OOP_lab6.vcxproj -> D:\Projects\OOp_2\Debug\OOP_lab6.exe
