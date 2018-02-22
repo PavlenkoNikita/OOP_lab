@@ -2,7 +2,7 @@
 #include <iostream>
 #include <ostream>
 #include <string>
-#include <algorithm>
+#include <vector>
 #include <wchar.h>
 
 
@@ -14,9 +14,7 @@ public:
 	{
 		this->STR = L"";
 		this->count_UpSymb_InWord = 0;
-		this->count_words = 1;
-		this->last_word = L"";
-		massive_index_words[0] = 0;
+		this->count_words = 0;
 	}
 
 	~MyWString()
@@ -28,10 +26,12 @@ public:
 	{
 		if (this->count_words <= 50 && symb_check == L'.')
 		{
-			if (this->count_words >= 2)
+			if (this->count_words >= 1)
 			{
 				if (this->STR[STR.length() - 1] != L' ')
 				{
+					words.push_back(temp_word);
+					this->count_words++;
 					return 2;
 				}
 			}
@@ -46,56 +46,34 @@ public:
 			return 1;
 		}
 	}
-	//
+	//Нахождение не совпадающий слов
 	void getSimilarWords()
 	{
 		bool check_words = false;
-		getLastWord();
-		for (int i = 0; i < count_words-1; i++)
+		std::wstring last_word = words.back();
+		std::wstring current_word;
+		for (int i = 0; last_word != words[i]; i++)
 		{
-			std::wstring next_word = L"";
-			getNextWord(next_word, i);
-			if (wcscmp(next_word.c_str(), last_word.c_str()) != 0)
+			current_word = words[i];
+			if (wcscmp(words[i].c_str(), last_word.c_str()) && current_word.find(current_word[i], 1) != std::string::npos)
 			{
-				if (next_word.find(next_word[0], 1) != std::string::npos)
-				{
-					check_words = true;
-					std::wcout << next_word << L" ";
-				}	
+				check_words = true;
+				std::wcout << current_word << L" ";
 			}
 		}
 		if (!check_words)
 		{
-			std::wcout << (L"Сравнений не обнаружено.");
+			std::wcout << (L"совпадений не обнаружено.");
 		}
 	}
-	//Нахождение следующего слова
-	void getNextWord(std::wstring & next_word, int index_next_word)
-	{
-		
-		int index_word = massive_index_words[index_next_word];
-		for (int i = 0; STR[index_word + i] != L' '; i++)
-		{
-			next_word += STR[index_word + i];
-		}
-	}
-	//Нахождение последнего слова
-	void getLastWord()
-	{
-		for (int i = 0; STR[STR.length() - 2 - i] != L' '; i++)
-		{
-			last_word += STR[STR.length() - 2 - i];
-		}
-		std::reverse(last_word.begin(), last_word.end());
-	}
-
-	MyWString & operator+=(const wchar_t symbol_add)
+	//Добавление символа в строку
+	MyWString & operator+=(const wchar_t& symbol_add)
 	{
 		this->STR += symbol_add;
 		return (*this);
 	}
-
-	MyWString & operator+(const wchar_t symbol_add)
+	//Добавление символа в строку
+	MyWString & operator+(const wchar_t& symbol_add)
 	{
 		this->STR = STR + symbol_add;
 		return (*this);
@@ -104,11 +82,12 @@ public:
 private:
 	//Строка
 	std::wstring STR;
-	//Последнее слово в строке
-	std::wstring last_word;
+	//Все слова
+	std::vector<std::wstring> words;
+	//Собирание слова
+	std::wstring temp_word;
 	//Количество прописных букв
 	int count_UpSymb_InWord;
-	int massive_index_words[50];
 	//Количество слов
 	int count_words;
 
@@ -120,10 +99,7 @@ private:
 		{
 			if (++this->count_UpSymb_InWord <= 8)
 			{
-				if (this->count_UpSymb_InWord == 1 && this->count_words >= 2)
-				{
-					massive_index_words[count_words - 1] = STR.length();
-				}
+				this->temp_word += symb_check;
 				return true;
 			}
 			else
@@ -134,22 +110,22 @@ private:
 		//Проверка на пробел
 		else if (symb_check == 32)
 		{
-			if (this->count_words != 50 && this->count_UpSymb_InWord != 0)
+			if (this->count_words != 50 && (!this->temp_word.empty() || this->count_words != 0))
 			{
 				this->count_UpSymb_InWord = 0;
-				if (this->STR[STR.length() - 1] != L' ')
+				if (this->STR[this->STR.length() - 1] != L' ')
 				{
+					this->words.push_back(this->temp_word);
+					this->temp_word.clear();
 					this->count_words++;
 					return true;
 				}
-				else
+				else 
 				{
 					return true;
 				}
 			}
 		}
 		return false;
-	}
-	
-	
+	}	
 };
