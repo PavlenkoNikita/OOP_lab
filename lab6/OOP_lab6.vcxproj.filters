@@ -20,7 +20,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MyWString.h">
+    <ClInclude Include="GetRightString.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

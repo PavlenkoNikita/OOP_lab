@@ -1,26 +1,18 @@
 #pragma once
 #include <iostream>
-#include <ostream>
 #include <string>
 #include <vector>
-#include <wchar.h>
 
-
-class MyWString
+class GetRightString
 {
 public:
 	//Конструктор по умолчанию
-	MyWString()
+	GetRightString()
 	{
 		this->STR = L"";
 		this->count_UpSymb_InWord = 0;
 		this->count_words = 0;
 	}
-
-	~MyWString()
-	{
-	}
-
 	//Проверка на количество допустимых слов
 	int CheckWords(const wchar_t& symb_check)
 	{
@@ -32,18 +24,20 @@ public:
 				{
 					words.push_back(temp_word);
 					this->count_words++;
-					return 2;
+					AddAndWriteSymb(symb_check);
+					return 1;
 				}
 			}
-			return 1;
-		}
-		else if (this->count_words <= 50)
-		{
-			if (this->CheckSymbol(symb_check))
+			else
 			{
 				return 0;
 			}
-			return 1;
+		}
+		else if (this->count_words <= 50)
+		{
+			if (CheckCyrillicAlpha(symb_check)) {}
+			else if (CheckSpace(symb_check)) {}
+			return 0;
 		}
 	}
 	//Нахождение не совпадающий слов
@@ -52,10 +46,10 @@ public:
 		bool check_words = false;
 		std::wstring last_word = words.back();
 		std::wstring current_word;
-		for (int i = 0; last_word != words[i]; i++)
+		for (int i = 0; i < words.size(); i++)
 		{
 			current_word = words[i];
-			if (wcscmp(words[i].c_str(), last_word.c_str()) && current_word.find(current_word[i], 1) != std::string::npos)
+			if (wcscmp(words[i].c_str(), last_word.c_str()) && current_word.find(current_word[0], 1) != std::string::npos)
 			{
 				check_words = true;
 				std::wcout << current_word << L" ";
@@ -66,19 +60,6 @@ public:
 			std::wcout << (L"совпадений не обнаружено.");
 		}
 	}
-	//Добавление символа в строку
-	MyWString & operator+=(const wchar_t& symbol_add)
-	{
-		this->STR += symbol_add;
-		return (*this);
-	}
-	//Добавление символа в строку
-	MyWString & operator+(const wchar_t& symbol_add)
-	{
-		this->STR = STR + symbol_add;
-		return (*this);
-	}
-
 private:
 	//Строка
 	std::wstring STR;
@@ -90,16 +71,21 @@ private:
 	int count_UpSymb_InWord;
 	//Количество слов
 	int count_words;
-
-	//Метод проверки символа
-	bool CheckSymbol(const wchar_t & symb_check)
+	//Вывод допустимого символа в консоль и добавление его в строку
+	void AddAndWriteSymb(const wchar_t& symb)
 	{
-		//Проверка на символ [А-Я]
+		std::wcout << symb;
+		this->STR += symb;
+	}
+	//Проверка на символ прописной кириллицы
+	bool CheckCyrillicAlpha(const wchar_t& symb_check)
+	{
 		if (symb_check >= 1040 && symb_check <= 1071)
 		{
 			if (++this->count_UpSymb_InWord <= 8)
 			{
 				this->temp_word += symb_check;
+				AddAndWriteSymb(symb_check);
 				return true;
 			}
 			else
@@ -107,10 +93,17 @@ private:
 				return false;
 			}
 		}
-		//Проверка на пробел
-		else if (symb_check == 32)
+		else
 		{
-			if (this->count_words != 50 && (!this->temp_word.empty() || this->count_words != 0))
+			return false;
+		}
+	}
+	//Проверка на символ пробела
+	bool CheckSpace(const wchar_t & symb_check)
+	{
+		if (symb_check == 32)
+		{
+			if (!this->temp_word.empty() || this->count_words != 0)
 			{
 				this->count_UpSymb_InWord = 0;
 				if (this->STR[this->STR.length() - 1] != L' ')
@@ -118,14 +111,19 @@ private:
 					this->words.push_back(this->temp_word);
 					this->temp_word.clear();
 					this->count_words++;
+					AddAndWriteSymb(symb_check);
 					return true;
 				}
-				else 
+				else
 				{
+					AddAndWriteSymb(symb_check);
 					return true;
 				}
 			}
 		}
-		return false;
-	}	
+		else
+		{
+			return false;
+		}
+	}
 };

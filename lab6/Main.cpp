@@ -2,8 +2,7 @@
 #include <string>
 #include <io.h>
 #include <fcntl.h>
-//#include <conio.h>
-#include "MyWString.h"
+#include "GetRightString.h"
 
 int main() 
 {	
@@ -17,36 +16,18 @@ int main()
 	do
 	{
 		std::wcout << L"Строка №" << ++number_str << std::endl;
-		MyWString MyStr;
+		GetRightString MyStr;
 		wchar_t symbol;
 		while (true)
 		{
 			//Считываем символ
 			symbol = _getwch();
-			switch (MyStr.CheckWords(symbol))
+			//Проверка символа
+			if (MyStr.CheckWords(symbol))
 			{
-			//Введенный символ прописная кириллица или пробел
-			case 0:
-			{
-				MyStr += symbol;
-				std::wcout << symbol;
 				break;
 			}
-			//Введенный символ не прописная кириллица и не пробел
-			case 1:
-			{
-				continue;
-			}
-			//Введенный символ точка
-			case 2:
-			{
-				MyStr += symbol;
-				std::wcout << symbol;
-				goto END_STR;
-			}
-			}
 		}
-	END_STR:
 		std::wcout << L"\nРезультат: ";
 		//Получение не совпадающих слов
 		MyStr.getSimilarWords();
