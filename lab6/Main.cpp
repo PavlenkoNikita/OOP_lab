@@ -1,8 +1,6 @@
-﻿#include <iostream>
-#include <string>
-#include <io.h>
+﻿#include <io.h>
 #include <fcntl.h>
-#include "GetRightString.h"
+#include "GetRightWString.h"
 
 int main() 
 {	
@@ -16,14 +14,11 @@ int main()
 	do
 	{
 		std::wcout << L"Строка №" << ++number_str << std::endl;
-		GetRightString MyStr;
-		wchar_t symbol;
+		GetRightWString MyStr;
 		while (true)
 		{
-			//Считываем символ
-			symbol = _getwch();
-			//Проверка символа
-			if (MyStr.CheckWords(symbol))
+			//Проверка символа точки
+			if (MyStr.CheckWords(_getwch()))
 			{
 				break;
 			}

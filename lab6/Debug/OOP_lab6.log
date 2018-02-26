@@ -1,5 +1,8 @@
 ﻿  Main.cpp
-d:\projects\oop_lab6\getrightstring.h(49): warning C4018: <: несоответствие типов со знаком и без знака
-d:\projects\oop_lab6\getrightstring.h(42): warning C4715: GetRightString::CheckWords: значение возвращается не при всех путях выполнения
-d:\projects\oop_lab6\getrightstring.h(128): warning C4715: GetRightString::CheckSpace: значение возвращается не при всех путях выполнения
+  GetRightWString.cpp
+d:\projects\oop_lab6\getrightwstring.cpp(33): warning C4390: ";": обнаружен пустой контролируемый оператор; это правильно?
+d:\projects\oop_lab6\getrightwstring.cpp(43): warning C4018: <: несоответствие типов со знаком и без знака
+  Создание кода...
+d:\projects\oop_lab6\getrightwstring.cpp(36): warning C4715: GetRightWString::CheckWords: значение возвращается не при всех путях выполнения
+d:\projects\oop_lab6\getrightwstring.cpp(112): warning C4715: GetRightWString::CheckSpace: значение возвращается не при всех путях выполнения
   OOP_lab6.vcxproj -> D:\Projects\OOp_2\Debug\OOP_lab6.exe
